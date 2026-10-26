@@ -15,6 +15,14 @@ export default function HomeScreen({ navigation }) {
         title="Se aktiviteter"
         onPress={() => navigation.navigate('Runs')}
       />
+
+      <View style={{ marginTop: 15 }}>
+        <Button
+          title="Mine aktiviteter"
+          onPress={() => navigation.navigate('MyActivities')}
+          color="#1B4332"
+        />
+      </View>
     </View>
   );
 }

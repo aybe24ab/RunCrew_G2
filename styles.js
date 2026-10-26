@@ -47,6 +47,18 @@ const styles = StyleSheet.create({
     color: '#444444',
     marginBottom: 5,
   },
+
+  // NYT I G2: Styling til søgefeltet
+  searchInput: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#B7C9BE',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 15,
+    color: '#1B4332',
+  },
 });
 
 export default styles;
