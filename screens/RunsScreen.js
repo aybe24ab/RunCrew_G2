@@ -11,10 +11,10 @@ import styles from '../styles';
 
 export default function RunsScreen({ navigation }) {
 
-  // Gem det, brugeren skriver i søgefeltet
+  // Gemmer det, brugeren skriver i søgefeltet
   const [search, setSearch] = useState('');
 
-  // Eksisterende aktiviteter fra G1
+  // Eksisterende aktiviteter fra G1, som bruges som testdata
   const runs = [
     {
       id: '1',
@@ -46,11 +46,13 @@ export default function RunsScreen({ navigation }) {
     },
   ];
 
-  // Filtrer aktiviteter ud fra brugerens søgning
+  // Filtrerer aktiviteter ud fra brugerens søgning
   const filteredRuns = runs.filter((run) => {
 
+    // Gør søgeteksten til små bogstaver og fjerner ekstra mellemrum
     const searchText = search.toLocaleLowerCase('da-DK').trim();
 
+    // Søger i aktivitetens navn, type, tempo og tidspunkt
     return (
       run.title.toLocaleLowerCase('da-DK').includes(searchText) ||
       run.type.toLocaleLowerCase('da-DK').includes(searchText) ||
@@ -66,7 +68,7 @@ export default function RunsScreen({ navigation }) {
         Kommende aktiviteter
       </Text>
 
-      {/* Nyt søgefelt til G2 */}
+      {/* Søgefelt tilføjet i G2 */}
       <TextInput
         style={styles.searchInput}
         placeholder="Søg efter område eller aktivitet..."
@@ -76,20 +78,25 @@ export default function RunsScreen({ navigation }) {
         clearButtonMode="while-editing"
       />
 
-      {/* Viser hvor mange aktiviteter der matcher */}
+      {/* Viser antallet af aktiviteter, der matcher søgningen */}
       <Text style={styles.text}>
         {filteredRuns.length} aktiviteter fundet
       </Text>
 
+      {/* Viser de filtrerede aktiviteter som en liste */}
       <FlatList
         data={filteredRuns}
         keyExtractor={(item) => item.id}
         keyboardShouldPersistTaps="handled"
+
+        // Viser en besked, hvis søgningen ikke giver resultater
         ListEmptyComponent={
           <Text style={styles.subtitle}>
             Ingen aktiviteter matcher din søgning.
           </Text>
         }
+
+        // Viser information og en knap for hver aktivitet
         renderItem={({ item }) => (
           <View style={styles.card}>
 
@@ -109,6 +116,7 @@ export default function RunsScreen({ navigation }) {
               Tidspunkt: {item.time}
             </Text>
 
+            {/* Åbner detaljeskærmen for den valgte aktivitet */}
             <Button
               title="Se aktivitet"
               onPress={() =>

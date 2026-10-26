@@ -4,21 +4,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles';
 
 export default function RunDetailsScreen({ route }) {
+  // Henter den aktivitet, som brugeren har valgt på aktivitetslisten
   const { run } = route.params;
 
+  // Holder styr på, om brugeren er tilmeldt, og om data indlæses
   const [joined, setJoined] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Hent tidligere tilmeldinger, når skærmen åbnes
+  // Henter tidligere tilmeldinger fra AsyncStorage, når skærmen åbnes
   useEffect(() => {
     const loadParticipation = async () => {
       try {
         const savedActivities = await AsyncStorage.getItem('myActivities');
 
+        // Omdanner gemte data til en liste over aktiviteter
         const activities = savedActivities
           ? JSON.parse(savedActivities)
           : [];
 
+        // Kontrollerer, om den valgte aktivitet allerede er tilmeldt
         const isJoined = activities.some(
           (activity) => activity.id === run.id
         );
@@ -35,13 +39,14 @@ export default function RunDetailsScreen({ route }) {
     loadParticipation();
   }, [run.id]);
 
-  // Tilmeld eller afmeld en aktivitet
+  // Håndterer tilmelding og afmelding af en aktivitet
   const handleParticipation = async () => {
     if (loading) return;
 
     setLoading(true);
 
     try {
+      // Henter brugerens eksisterende tilmeldinger
       const savedActivities = await AsyncStorage.getItem('myActivities');
 
       let activities = savedActivities
@@ -53,11 +58,12 @@ export default function RunDetailsScreen({ route }) {
       );
 
       if (isAlreadyJoined) {
-        // Fjern aktiviteten fra brugerens tilmeldinger
+        // Fjerner aktiviteten fra brugerens tilmeldinger
         activities = activities.filter(
           (activity) => activity.id !== run.id
         );
 
+        // Gemmer den opdaterede liste i AsyncStorage
         await AsyncStorage.setItem(
           'myActivities',
           JSON.stringify(activities)
@@ -70,9 +76,10 @@ export default function RunDetailsScreen({ route }) {
           'Du har afmeldt aktiviteten.'
         );
       } else {
-        // Gem aktiviteten i brugerens tilmeldinger
+        // Tilføjer den valgte aktivitet til brugerens tilmeldinger
         activities.push(run);
 
+        // Gemmer tilmeldingen, så den huskes efter appen lukkes
         await AsyncStorage.setItem(
           'myActivities',
           JSON.stringify(activities)
@@ -116,6 +123,7 @@ export default function RunDetailsScreen({ route }) {
           Tidspunkt: {run.time}
         </Text>
 
+        {/* Knappen skifter mellem Deltag og Afmeld aktivitet */}
         <Button
           title={
             loading
